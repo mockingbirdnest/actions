@@ -1,0 +1,23 @@
+name: windows_rebuild
+description: 'Rebuilds a solution on Windows.'
+inputs:
+  configuration:
+    description: 'The configuration (Debug, Release, etc.) to build.'
+    required: true
+  solution_directory:
+    description: 'The path where the MSVC solution is located.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - run: >
+        ls ${{ inputs.solution_directory }}\*.sln | %
+        {
+        &"${{ env.msbuild }}"
+        /target:"Clean;Build"
+        /maxCpuCount
+        /property:Configuration=${{ inputs.configuration }}
+        /property:Platform=x64
+        $_
+        }
+      shell: pwsh
