@@ -1,4 +1,4 @@
-name: windows_upload_artifact
+name: windows/upload_artifact
 description: 'Uploads an artifact required for building on Windows.'
 inputs:
   name:

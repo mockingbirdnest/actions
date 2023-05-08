@@ -1,4 +1,4 @@
-name: windows_rebuild
+name: windows/rebuild
 description: 'Rebuilds a solution on Windows.'
 inputs:
   configuration:
