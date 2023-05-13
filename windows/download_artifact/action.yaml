@@ -2,12 +2,8 @@ name: windows/download_artifact
 description: 'Downloads an artifact required for building on Windows.'
 inputs:
   name:
-    description: 'Name of the artifact to download.'
+    description: 'Name of the artifact to download.  Must be produced by the similarly-named mockingbirdnest repository.'
     required: true
-  repository:
-    description: 'The name of the mockingbirdnest repository that produced the artifact.'
-    required: false
-    default: ${{ inputs.name }}
 runs:
   using: 'composite'
   steps:
@@ -17,5 +13,5 @@ runs:
         workflow: build.yaml
         workflow_conclusion: success
         name: ${{ inputs.name }}
-        path: ${{ github.workspace }}\..\${{ inputs.repository }}
-        repo: mockingbirdnest/${{ inputs.repository }}
+        path: ${{ github.workspace }}\..\${{ inputs.name }}
+        repo: mockingbirdnest/${{ inputs.name }}
