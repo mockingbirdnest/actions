@@ -6,7 +6,8 @@ inputs:
     required: true
   repository:
     description: 'The name of the mockingbirdnest repository that produced the artifact.'
-    required: true
+    required: false
+    default: ${{ inputs.name }}
 runs:
   using: 'composite'
   steps:
