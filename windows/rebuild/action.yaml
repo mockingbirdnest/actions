@@ -13,7 +13,7 @@ runs:
     - run: >
         ls ${{ inputs.solution_directory }}\*.sln | %
         {
-        &"${{ env.msbuild }}"
+        &"${{ env.MSBUILD_PATH }}"
         /target:"Clean;Build"
         /maxCpuCount
         /property:Configuration=${{ inputs.configuration }}
