@@ -1,0 +1,14 @@
+name: windows/find_msbuild
+description: 'Finds the location of MSBuild.'
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        $vswhere = "${Env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+        $msbuild = &$vswhere                    `
+          -prerelease                           `
+          -all                                  `
+          -requires Microsoft.Component.MSBuild `
+          -find MSBuild\**\Bin\MSBuild.exe
+        echo "MSBUILD_PATH=$msbuild" >> $env:GITHUB_ENV
+      shell: pwsh

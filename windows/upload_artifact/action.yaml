@@ -1,0 +1,25 @@
+name: windows/upload_artifact
+description: 'Uploads an artifact required for building on Windows.'
+inputs:
+  name:
+    description: 'Name of the artifact to create.'
+    required: true
+  headers_glob:
+    description: 'A glob for the headers to be included.'
+    required: true
+  solution_directory:
+    description: 'The path where the MSVC solution is located.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.name }}
+        path: |
+          ${{ inputs.headers_glob }}
+          ${{ inputs.solution_directory }}\**\*.dll
+          ${{ inputs.solution_directory }}\**\*.exe
+          ${{ inputs.solution_directory }}\**\*.lib
+          ${{ inputs.solution_directory }}\**\*.pdb
+          ${{ inputs.solution_directory }}\**\*.props

@@ -1,0 +1,21 @@
+name: windows/restore
+description: 'Restores a solution on Windows.'
+inputs:
+  configuration:
+    description: 'The configuration (Debug, Release, etc.) to restore.'
+    required: true
+  solution_directory:
+    description: 'The path where the MSVC solution is located.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - run: >
+        ls ${{ inputs.solution_directory }}\*.sln | %
+        {
+        &"${{ env.MSBUILD_PATH }}"
+        /target:Restore
+        /property:Configuration=${{ inputs.configuration }}
+        $_
+        }
+      shell: pwsh
