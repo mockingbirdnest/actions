@@ -1,0 +1,20 @@
+name: windows/download_artifact
+description: 'Downloads an artifact required for building on Windows.'
+inputs:
+  name:
+    description: 'Name of the artifact to download.'
+    required: true
+  repository:
+    description: 'The name of the mockingbirdnest repository that produced the artifact.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN}}
+        workflow: build.yaml
+        workflow_conclusion: success
+        name: ${{ inputs.name }}
+        path: ${{ github.workspace }}\..\${{ inputs.repository }}
+        repo: mockingbirdnest/${{ inputs.repository }}
