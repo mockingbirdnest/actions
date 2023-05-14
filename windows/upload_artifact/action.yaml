@@ -4,7 +4,7 @@ inputs:
   name:
     description: 'Name of the artifact to create.'
     required: true
-  header_directory:
+  headers_directory:
     description: 'A glob for the directory containing the headers to be included.'
     required: true
   solution_directory:
@@ -17,9 +17,9 @@ runs:
       with:
         name: ${{ inputs.name }}
         path: |
-          ${{ inputs.header_directory }}/**/*.h
-          ${{ inputs.header_directory }}/**/*.inc
-          ${{ inputs.header_directory }}/**/*.proto
+          ${{ inputs.headers_directory }}/**/*.h
+          ${{ inputs.headers_directory }}/**/*.inc
+          ${{ inputs.headers_directory }}/**/*.proto
           ${{ inputs.solution_directory }}/**/*.dll
           ${{ inputs.solution_directory }}/**/*.exe
           ${{ inputs.solution_directory }}/**/*.lib
