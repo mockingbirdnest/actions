@@ -13,7 +13,7 @@ runs:
     - run: >
         ls ${{ inputs.solution_directory }}\*.sln | %
         {
-        &"${{ env.MSBUILD_PATH }}"
+        &"${{ env.PRINCIPIA_MSBUILD_PATH }}"
         /target:"Clean;Build"
         /maxCpuCount
         /property:Configuration=${{ inputs.configuration }}
@@ -21,3 +21,5 @@ runs:
         $_
         }
       shell: pwsh
+      env:
+        PRINCIPIA_MSBUILD_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe
