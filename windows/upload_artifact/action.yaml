@@ -4,8 +4,8 @@ inputs:
   name:
     description: 'Name of the artifact to create.'
     required: true
-  headers_glob:
-    description: 'A glob for the headers to be included.'
+  headers_directory:
+    description: 'A glob for the directory containing the headers to be included.'
     required: true
   solution_directory:
     description: 'The path where the MSVC solution is located.'
@@ -17,9 +17,11 @@ runs:
       with:
         name: ${{ inputs.name }}
         path: |
-          ${{ inputs.headers_glob }}
-          ${{ inputs.solution_directory }}\**\*.dll
-          ${{ inputs.solution_directory }}\**\*.exe
-          ${{ inputs.solution_directory }}\**\*.lib
-          ${{ inputs.solution_directory }}\**\*.pdb
-          ${{ inputs.solution_directory }}\**\*.props
+          ${{ inputs.headers_directory }}/**/*.h
+          ${{ inputs.headers_directory }}/**/*.inc
+          ${{ inputs.headers_directory }}/**/*.proto
+          ${{ inputs.solution_directory }}/**/*.dll
+          ${{ inputs.solution_directory }}/**/*.exe
+          ${{ inputs.solution_directory }}/**/*.lib
+          ${{ inputs.solution_directory }}/**/*.pdb
+          ${{ inputs.solution_directory }}/**/*.props
