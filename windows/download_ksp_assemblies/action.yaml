@@ -1,0 +1,21 @@
+name: windows/download_ksp_assemblies
+description: 'Downloads and uncompresses the KSP assemblies.'
+inputs:
+  secret_directory:
+    description: 'Secret directory on the file server.'
+    required: true
+  ksp_version:
+    description: 'KSP version.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        $assemblies_directory = '../KSP Assemblies'
+        New-Item -ItemType Directory -Force $assemblies_directory
+        Remove-Item -Recurse -ErrorAction SilentlyContinue $assemblies_directory
+        Invoke-WebRequest                                                                                                   `
+          http://principia.mockingbirdnest.com/${{ input.secret_directory }}/KSP%20Assemblies/${{ inputs.ksp_version }}.zip `
+          -OutFile "$assemblies_directory\${{ inputs.ksp_version }}.zip"
+        Expand-Archive -f "$assemblies_directory\${{ inputs.ksp_versions }}.zip" "$assemblies_directory"
+
