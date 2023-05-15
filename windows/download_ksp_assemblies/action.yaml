@@ -18,4 +18,5 @@ runs:
           http://principia.mockingbirdnest.com/${{ input.secret_directory }}/KSP%20Assemblies/${{ inputs.ksp_version }}.zip `
           -OutFile "$assemblies_directory\${{ inputs.ksp_version }}.zip"
         Expand-Archive -f "$assemblies_directory\${{ inputs.ksp_versions }}.zip" "$assemblies_directory"
+      shell: pwsh
 
