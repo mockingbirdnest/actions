@@ -12,11 +12,11 @@ runs:
   steps:
     - run: |
         $assemblies_directory = '../KSP Assemblies'
-        New-Item -ItemType Directory -Force "$assemblies_directory"
+        New-Item -ItemType Directory -Force $assemblies_directory
         Remove-Item -Recurse -ErrorAction SilentlyContinue $assemblies_directory
         Invoke-WebRequest                                                                                                    `
           http://principia.mockingbirdnest.com/${{ inputs.secret_directory }}/KSP%20Assemblies/${{ inputs.ksp_version }}.zip `
-          -OutFile "$assemblies_directory\${{ inputs.ksp_version }}.zip"
-        Expand-Archive -f "$assemblies_directory\${{ inputs.ksp_version }}.zip" "$assemblies_directory"
+          -OutFile $assemblies_directory/${{ inputs.ksp_version }}.zip
+        Expand-Archive -f $assemblies_directory/${{ inputs.ksp_version }}.zip $assemblies_directory
       shell: pwsh
 
