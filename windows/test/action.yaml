@@ -1,0 +1,22 @@
+name: windows/test
+description: 'Tests a solution'
+inputs:
+  configuration:
+    description: 'The configuration (Debug, Release, etc.) to test.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+      run: |
+        New-Item -ItemType Directory -Force TestResults
+        Remove-Item -Recurse -ErrorAction SilentlyContinue TestResults/*
+        if ( "${{ inputs.configuration }}" -eq 'Debug') {
+          $granularity = 'Package'
+        } else {
+          $granularity = 'Test'
+        }
+        # For now, this only works with Principia.
+        .\parallel_test_runner\bin\${{ inputs.configuration }}\parallel_test_runner.exe `
+          --granularity:$granularity                                                    `
+          .\${{ inputs.configuration }}\x64
+      shell: pwsh
