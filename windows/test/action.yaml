@@ -7,7 +7,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-      run: |
+    - run: |
         New-Item -ItemType Directory -Force TestResults
         Remove-Item -Recurse -ErrorAction SilentlyContinue TestResults/*
         if ( "${{ inputs.configuration }}" -eq 'Debug') {
