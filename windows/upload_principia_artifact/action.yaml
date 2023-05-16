@@ -1,5 +1,5 @@
 name: windows/upload_principia_artifact
-description: 'Upload a Principia build artifact.'
+description: 'Uploads a Principia build artifact.'
 inputs:
   configuration:
     description: 'The configuration (Debug, Release, etc.) to build.'

@@ -1,5 +1,5 @@
 name: windows/test
-description: 'Tests a solution'
+description: 'Tests a solution.'
 inputs:
   configuration:
     description: 'The configuration (Debug, Release, etc.) to test.'
