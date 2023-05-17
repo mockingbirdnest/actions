@@ -23,7 +23,7 @@ runs:
       with:
         name: ${{ inputs.name }}_signature
         path: ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
-    - name: Upload build artifact
+    - name: Upload build headers and objects
       uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.name }}
