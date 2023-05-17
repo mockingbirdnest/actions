@@ -13,7 +13,18 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/upload-artifact@v3
+    - name: Compute signature
+      run: |
+        $signature = (Get-FileHash ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}).Hash
+        Write-Output $signature > ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+      shell: pwsh
+    - name: Upload build signature
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.name }}_signature
+        path: ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.name }}
         path: |
