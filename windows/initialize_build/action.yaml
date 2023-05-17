@@ -20,7 +20,7 @@ runs:
       shell: pwsh
     - name: Append git SHA to signature
       run: |
-        Write-Output ${{ git.sha }} >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+        Write-Output ${{ github.sha }} >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
       shell: pwsh
     - name: Append MSBuild version to signature
       run: |
