@@ -10,14 +10,14 @@ runs:
     # We need two separate steps so that the second one sees the environment variables set by the first one.
     - run: |
         # Set the MSBuild path.
-        Write-Output
-        'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/MSBuild.exe'
+        Write-Output                                                                                                      `
+        'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/MSBuild.exe' `
         >> $env:GITHUB_ENV
 
         # Set the build signature path.  Note that the configuration is in the file name, not its contents.
         $build_signature_path = Join-Path ${{ env.TEMP }} ${{ inputs.configuration }}
         New-Item -Type Directory -Path $build_signature_path | Out-Null
-        Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature" >> $env:GITHUB_ENV
+        Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature_path" >> $env:GITHUB_ENV
       shell: pwsh
     - run: |
         # Append the git SHA to the signature.
