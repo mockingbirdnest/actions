@@ -8,7 +8,7 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        New-Item -ItemType Directory -Force TestResults
+        $null = New-Item -ItemType Directory -Force TestResults
         Remove-Item -Recurse -ErrorAction SilentlyContinue TestResults/*
         if ( "${{ inputs.configuration }}" -eq 'Debug') {
           $granularity = 'Package'
