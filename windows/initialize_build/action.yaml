@@ -15,7 +15,7 @@ runs:
         >> $env:GITHUB_ENV
 
         # Set the build signature path.  Note that the configuration is in the file name, not its contents.
-        $build_signature_path = Join-Path ${{ env.TEMP }} ${{ inputs.configuration }}
+        $build_signature_path = Join-Path (New-TemporaryFile).Directory ${{ inputs.configuration }}
         New-Item -Type Directory -Path $build_signature_path | Out-Null
         Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature_path" >> $env:GITHUB_ENV
       shell: pwsh
