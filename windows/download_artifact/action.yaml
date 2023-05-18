@@ -11,6 +11,27 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - run: >
+        # Create a temporary directory to hold the signature of the artifact.
+        Write-Output 
+        "build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })"
+        >> $GITHUB_OUTPUT
+      shell: pwsh
+      id: initialize
+    - uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{ github.token }}
+        workflow: build.yaml
+        workflow_conclusion: success
+        name: ${{ inputs.name }}.signature
+        path: ${{ steps.initialize.build_signature_download_path }}
+        repo: mockingbirdnest/${{ inputs.name }}
+    - run: >
+        # Append the signature of the artifact to that of our build workflow.
+        Get-Content
+        -Path (Join-Path ${{ steps.initialize.build_signature_download_path }} ${{ inputs.configuration }})
+        >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+      shell: pwsh
     - uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ github.token }}
