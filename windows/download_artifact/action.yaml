@@ -50,10 +50,13 @@ runs:
 
         # Append the new signature to that of our build workflow.
         Write-Output $build_signature >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+
+        echo ${{steps.pre.outputs.build_signature }}
+        echo ${{steps.post.outputs.build_signature }}
       shell: pwsh
       id: post
 
-    - if: ${{steps.initialize.outputs.old_build_signature }} != ${{steps.foo.outputs.new_build_signature }}
+    - if: ${{steps.pre.outputs.build_signature }} != ${{steps.post.outputs.build_signature }}
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ github.token }}
