@@ -27,7 +27,7 @@ runs:
         workflow: build.yaml
         workflow_conclusion: success
         name: ${{ inputs.name }}.signature
-        path: ${{ steps.initialize.build_signature_download_path }}
+        path: ${{ steps.initialize.outputs.build_signature_download_path }}
         repo: mockingbirdnest/${{ inputs.name }}
     - run: >
         # Append the signature of the artifact to that of our build workflow.
