@@ -23,7 +23,7 @@ runs:
 
         # Set the build signature cache path.
         $build_signature_cache_path = Join-Path (Get-Item ${{ github.workspace }}).parent 'signature_cache'
-        Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature_cache_path" >> $env:GITHUB_ENV
+        Write-Output "PRINCIPIA_BUILD_SIGNATURE_CACHE_PATH=$build_signature_cache_path" >> $env:GITHUB_ENV
       shell: pwsh
 
     - run: |
