@@ -17,7 +17,7 @@ runs:
     - run: |
         # Create a temporary directory to hold the signature of the artifact.
         $build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })
-        Write-Output "build_signature_download_path=$build_signature_download_path b" >> $env:GITHUB_OUTPUT
+        Write-Output "build_signature_download_path=$build_signature_download_path" >> $env:GITHUB_OUTPUT
       shell: pwsh
       id: initialize
     - uses: dawidd6/action-download-artifact@v2
