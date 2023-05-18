@@ -30,6 +30,7 @@ runs:
         repo: mockingbirdnest/${{ inputs.name }}
     - run: |
         # Append the signature of the artifact to that of our build workflow.
+        ls -r ${{ steps.initialize.outputs.build_signature_download_path }}
         Get-Content                                                                                                 `
         -Path (Join-Path ${{ steps.initialize.outputs.build_signature_download_path }} ${{ inputs.configuration }}) `
         >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
