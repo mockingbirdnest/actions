@@ -14,10 +14,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: >
+    - run: |
         # Create a temporary directory to hold the signature of the artifact.
-        Write-Output 
-        "build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })"
+        Write-Output                                                                                                        `
+        "build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })" `
         >> $GITHUB_OUTPUT
       shell: pwsh
       id: initialize
