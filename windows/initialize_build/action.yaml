@@ -1,0 +1,34 @@
+name: windows/initialize_build
+description: 'Initializes the build environment'
+inputs:
+  configuration:
+    description: 'The configuration (Debug, Release, etc.) to build.'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    # We need two separate steps so that the second one sees the environment variables set by the first one.
+    - run: |
+        # Set environment variables.
+
+        # Set the MSBuild path.
+        Write-Output                                                                                                      `
+        'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/MSBuild.exe' `
+        >> $env:GITHUB_ENV
+
+        # Set the build signature path.  Note that the configuration is in the file name, not its contents.
+        $build_signature_path = Join-Path (New-TemporaryFile).Directory ${{ inputs.configuration }}
+        Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature_path" >> $env:GITHUB_ENV
+      shell: pwsh
+    - run: |
+        # Prepare the signature.
+
+        # Append the git SHA to the signature.
+        Write-Output ${{ github.sha }} >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+      
+        # Append the MSBuild version to the signature.
+        &"${{ env.PRINCIPIA_MSBUILD_PATH }}" -version >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+
+        # Append the configuration to the signature.
+        Write-Output ${{ inputs.configuration }} >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+      shell: pwsh

@@ -4,6 +4,9 @@ inputs:
   name:
     description: 'Name of the artifact to download.  Must be produced by the similarly-named mockingbirdnest repository.'
     required: true
+  configuration:
+    description: 'The configuration (Debug, Release, etc.) to build.'
+    required: true
   directory:
     description: 'Directory where the artifact must be downloaded, within the top-level directory of the workspace.'
     required: false
@@ -11,6 +14,26 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - run: |
+        # Create a temporary directory to hold the signature of the artifact.
+        $build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })
+        Write-Output "build_signature_download_path=$build_signature_download_path" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+      id: initialize
+    - uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{ github.token }}
+        workflow: build.yaml
+        workflow_conclusion: success
+        name: ${{ inputs.name }}.signature
+        path: ${{ steps.initialize.outputs.build_signature_download_path }}
+        repo: mockingbirdnest/${{ inputs.name }}
+    - run: |
+        # Append the signature of the artifact to that of our build workflow.
+        Get-Content                                                                                                 `
+        -Path (Join-Path ${{ steps.initialize.outputs.build_signature_download_path }} ${{ inputs.configuration }}) `
+        >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+      shell: pwsh
     - uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ github.token }}
