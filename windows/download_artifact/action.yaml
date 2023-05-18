@@ -16,9 +16,9 @@ runs:
   steps:
     - run: |
         # Create a temporary directory to hold the signature of the artifact.
-        echo (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })
+        $b = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })
         Write-Output                                                                                                        `
-        "build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })" `
+        "build_signature_download_path=$b" `
         >> $env:GITHUB_OUTPUT
       shell: pwsh
       id: initialize
