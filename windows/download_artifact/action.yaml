@@ -58,7 +58,7 @@ runs:
         echo ${{steps.post.outputs.build_signature }}
       shell: pwsh    
 
-    - if: ${{steps.pre.outputs.build_signature }} != ${{steps.post.outputs.build_signature }}
+    - if: ${{ steps.pre.outputs.build_signature != steps.post.outputs.build_signature }}
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ github.token }}
