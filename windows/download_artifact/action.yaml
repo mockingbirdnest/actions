@@ -16,14 +16,10 @@ runs:
   steps:
     - run: |
         # Create a temporary directory to hold the signature of the artifact.
-        $b = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })
-        Write-Output                                                                                                        `
-        "build_signature_download_path=$b" `
-        >> $env:GITHUB_OUTPUT
+        $build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })
+        Write-Output "build_signature_download_path=$build_signature_download_path b" >> $env:GITHUB_OUTPUT
       shell: pwsh
       id: initialize
-    - run: echo ${{ steps.initialize.outputs.build_signature_download_path }}
-      shell: pwsh
     - uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ github.token }}
@@ -34,8 +30,8 @@ runs:
         repo: mockingbirdnest/${{ inputs.name }}
     - run: |
         # Append the signature of the artifact to that of our build workflow.
-        Get-Content                                                                                         `
-        -Path (Join-Path ${{ steps.initialize.build_signature_download_path }} ${{ inputs.configuration }}) `
+        Get-Content                                                                                                 `
+        -Path (Join-Path ${{ steps.initialize.outputs.build_signature_download_path }} ${{ inputs.configuration }}) `
         >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
       shell: pwsh
     - uses: dawidd6/action-download-artifact@v2

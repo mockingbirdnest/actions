@@ -15,6 +15,7 @@ runs:
   steps:
     - name: Compute signature
       run: |
+        Get-Content ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
         $signature = (Get-FileHash ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}).Hash
         Write-Output $signature > ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
       shell: pwsh
