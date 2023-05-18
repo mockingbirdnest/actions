@@ -24,4 +24,7 @@ runs:
       
         # Append the MSBuild version to the signature.
         &"${{ env.PRINCIPIA_MSBUILD_PATH }}" -version >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+
+        # Append the configuration to the signature.
+        Write-Output ${{ inputs.configuration }} >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
       shell: pwsh
