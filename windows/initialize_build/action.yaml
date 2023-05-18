@@ -7,6 +7,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    # We need two separate steps so that the second one sees the environment variables set by the first one.
     - run: |
         # Set the MSBuild path.
         Write-Output
@@ -17,7 +18,8 @@ runs:
         $build_signature_path = Join-Path ${{ env.TEMP }} ${{ inputs.configuration }}
         New-Item -Type Directory -Path $build_signature_path | Out-Null
         Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature" >> $env:GITHUB_ENV
-
+      shell: pwsh
+    - run: |
         # Append the git SHA to the signature.
         Write-Output ${{ github.sha }} >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
       
