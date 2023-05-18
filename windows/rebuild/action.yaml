@@ -19,6 +19,8 @@ runs:
         /maxCpuCount:$max_cpu_count                         `
         /property:Configuration=${{ inputs.configuration }} `
         /property:Platform=x64                              `
+        /property:UseMultiToolTask=true                     `
+        /property:EnforceProcessCountAcrossBuilds=true      `
         $_                                                  `
         }                                                   `
       shell: pwsh
