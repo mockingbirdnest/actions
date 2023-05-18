@@ -8,6 +8,7 @@ runs:
   using: 'composite'
   steps:
     # We need two separate steps so that the second one sees the environment variables set by the first one.
+
     - run: |
         # Set environment variables.
 
@@ -16,10 +17,15 @@ runs:
         'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/MSBuild.exe' `
         >> $env:GITHUB_ENV
 
-        # Set the build signature path.  Note that the configuration is in the file name, not its contents.
+        # Set the build signature path.
         $build_signature_path = Join-Path (New-TemporaryFile).Directory ${{ inputs.configuration }}
         Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature_path" >> $env:GITHUB_ENV
+
+        # Set the build signature cache path.
+        $build_signature_cache_path = Join-Path (Get-Item ${{ github.workspace }}).parent 'signature_cache'
+        Write-Output "PRINCIPIA_BUILD_SIGNATURE_PATH=$build_signature_cache_path" >> $env:GITHUB_ENV
       shell: pwsh
+
     - run: |
         # Prepare the signature.
 

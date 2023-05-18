@@ -15,26 +15,46 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        # Create a temporary directory to hold the signature of the artifact.
-        $build_signature_download_path = (New-TemporaryFile | % { Remove-Item $_; New-Item -ItemType Directory -Path $_ })
-        Write-Output "build_signature_download_path=$build_signature_download_path" >> $env:GITHUB_OUTPUT
+        # Create the directory that holds the signature cache for the artifact.
+        $build_signature_cache_path = (Join-Path ${{ env.PRINCIPIA_BUILD_SIGNATURE_CACHE_PATH }} ${{ inputs.name }})
+        New-Item -ItemType Directory $build_signature_cache_path
+        Write-Output "build_signature_cache_path=$build_signature_cache_path" >> $env:GITHUB_OUTPUT
       shell: pwsh
       id: initialize
+
+    - run: |
+        # Load the old signature if it exists.
+        $build_signature =               `
+          (Get-Content                   `
+           -ErrorAction:SilentlyContinue `
+           -Path (Join-Path ${{ steps.initialize.outputs.build_signature_cache_path }} ${{ inputs.configuration }}))
+        Write-Output "build_signature=$build_signature" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+      id: pre
+
     - uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ github.token }}
         workflow: build.yaml
         workflow_conclusion: success
         name: ${{ inputs.name }}.signature
-        path: ${{ steps.initialize.outputs.build_signature_download_path }}
+        path: ${{ steps.initialize.outputs.build_signature_cache_path }}
         repo: mockingbirdnest/${{ inputs.name }}
+
     - run: |
+        # Load the new signature.
+        $build_signature = `
+          (Get-Content     `
+           -Path (Join-Path ${{ steps.initialize.outputs.build_signature_cache_path }} ${{ inputs.configuration }}))
+        Write-Output "build_signature=$build_signature" >> $env:GITHUB_OUTPUT
+
         # Append the signature of the artifact to that of our build workflow.
-        Get-Content                                                                                                 `
-        -Path (Join-Path ${{ steps.initialize.outputs.build_signature_download_path }} ${{ inputs.configuration }}) `
-        >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
+        Write-Output $build_signature >> ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
       shell: pwsh
-    - uses: dawidd6/action-download-artifact@v2
+      id: post
+
+    - if: ${{steps.initialize.outputs.old_build_signature }} != ${{steps.foo.outputs.new_build_signature }}
+      uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{ github.token }}
         workflow: build.yaml
