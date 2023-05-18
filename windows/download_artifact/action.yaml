@@ -4,6 +4,9 @@ inputs:
   name:
     description: 'Name of the artifact to download.  Must be produced by the similarly-named mockingbirdnest repository.'
     required: true
+  configuration:
+    description: 'The configuration (Debug, Release, etc.) to build.'
+    required: true
   directory:
     description: 'Directory where the artifact must be downloaded, within the top-level directory of the workspace.'
     required: false
