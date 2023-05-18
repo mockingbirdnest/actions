@@ -11,7 +11,7 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        $max_cpu_count = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 2
+        $max_cpu_count = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 4
         ls ${{ inputs.solution_directory }}\*.sln | %       `
         {                                                   `
         &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
