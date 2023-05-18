@@ -10,17 +10,17 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: >
+    - run: |
         $max_cpu_count = (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 2
-        ls ${{ inputs.solution_directory }}\*.sln | %
-        {
-        &"${{ env.PRINCIPIA_MSBUILD_PATH }}"
-        /target:"Clean;Build"
-        /maxCpuCount:$max_cpu_count
-        /property:Configuration=${{ inputs.configuration }}
-        /property:Platform=x64
-        $_
-        }
+        ls ${{ inputs.solution_directory }}\*.sln | %       `
+        {                                                   `
+        &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
+        /target:"Clean;Build"                               `
+        /maxCpuCount:$max_cpu_count                         `
+        /property:Configuration=${{ inputs.configuration }} `
+        /property:Platform=x64                              `
+        $_                                                  `
+        }                                                   `
       shell: pwsh
       env:
         PRINCIPIA_MSBUILD_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe
