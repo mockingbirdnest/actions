@@ -29,6 +29,9 @@ runs:
             if ($_ -match '\s+(?<id>\d+)>') {
               $id = $Matches.id
             }
+            if ($_ -match '^\s+\d+>\w+:$') {
+              continue
+            }
             if ($_ -match "\s*(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
               if ($Matches.type -in @('error', 'warning')) {
                 if ($last_error[$id]) {
