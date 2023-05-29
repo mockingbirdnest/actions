@@ -25,6 +25,7 @@ runs:
           /property:Platform=x64                              `
           /property:UseMultiToolTask=true                     `
           /property:EnforceProcessCountAcrossBuilds=true      `
+          /consoleloggerparameters:ShowEventId,ShowTimestamp  `
           $_
           | % {
             Write-Output $_
