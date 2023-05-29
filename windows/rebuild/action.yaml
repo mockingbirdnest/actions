@@ -38,7 +38,7 @@ runs:
                 $prefix = "TGT" + $id.PadLeft(5)
                 $_ = $Matches.1
               }
-              # Write-Output "$prefix $_"
+              Write-Output "$prefix $_"
               if ($done -or $_ -eq 'Build FAILED.') {
                 $done = $true
                 return
