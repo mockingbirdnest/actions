@@ -23,6 +23,7 @@ runs:
           /property:Platform=x64                              `
           /property:UseMultiToolTask=true                     `
           /property:EnforceProcessCountAcrossBuilds=true      `
+          /distributedFileLogger	                            ̀ 
           /consoleloggerparameters:ShowEventId                `
           $_
           | % {
@@ -79,6 +80,10 @@ runs:
             }
           }
           Write-Output $last_error.Values 
+          foreach ($f in ls "MSBuild*.log") {
+            Get-Content $f
+            echo "================================="
+          }
         }
       shell: pwsh
       env:
