@@ -34,7 +34,7 @@ runs:
                   Write-Output $last_error[$id]
                 }
                 $last_error[$id] = $null
-                if (-not $Matches.file.StarstWith($PWD)) {
+                if (-not $Matches.file.StartsWith($PWD)) {
                   $last_error[$id] = "::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.message)"
                 }
               }
