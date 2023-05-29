@@ -23,8 +23,8 @@ runs:
           $_
           | % {
             Write-Output $_
-            if ($_ -match '(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)') {
-              Write-Output "::$($Matches.type -replace 'message|note','notice') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
+            if ($_ -match "(?<file>$([Regex]::Escape($PWD))[^>]*)\((?<line>\d+),(?<column>\d+)\): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
+              Write-Output "::$($Matches.type -replace 'message|note','error') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
             }
           }
         }
