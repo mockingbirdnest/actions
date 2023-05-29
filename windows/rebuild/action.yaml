@@ -37,17 +37,20 @@ runs:
             if ($_ -match '^\s+\d+>\w+:$') {
               return
             }
-            if ($_ -match "\s*(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
+            if ($_ -match "\s*(?<location>(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\)): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
               if ($Matches.type -in @('error', 'warning')) {
                 if ($last_error[$id]) {
                   Write-Output $last_error[$id]
                 }
                 $last_error[$id] = $null
                 $skip_note[$id] = $false
+                if ($Matches.title -eq 'error C2220') {
+                  return
+                }
                 if ($Matches.file.StartsWith($PWD)) {
                   $last_error[$id] = "::$($Matches.type) file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
                 } else {
-                  $last_error[$id] = "::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$_"
+                  $last_error[$id] = "::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.location):%0A$($Matches.message)"
                 }
               } elseif ($last_error[$id]) {
                 if ($Matches.file.StartsWith($PWD)) {
