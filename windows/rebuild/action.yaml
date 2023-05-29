@@ -16,7 +16,6 @@ runs:
           $last_error = @{}
           $skip_note = @{}
           $done = $false
-          $id = ""
           &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
           /target:"Clean;Build"                               `
           /maxCpuCount:$max_cpu_count                         `
@@ -27,7 +26,8 @@ runs:
           /consoleloggerparameters:ShowEventId                `
           $_
           | % {
-            $prefix = ''
+            $id = ''
+            $prefix = '---     '
             if ($_ -match "^(.*)\s*\(TaskId:(?<id>\d+)\)$") {
               $id = $Matches.id
               $prefix = "TSK" + $id.PadLeft(5)
