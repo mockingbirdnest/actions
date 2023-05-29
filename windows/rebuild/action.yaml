@@ -16,7 +16,7 @@ runs:
           $last_error = @{}
           $skip_note = @{}
           $done = $false
-          $id = 0
+          $id = ""
           &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
           /target:"Clean;Build"                               `
           /maxCpuCount:$max_cpu_count                         `
