@@ -24,7 +24,8 @@ runs:
           /consoleloggerparameters:ShowEventId                `
           $_
           foreach ($f in ls "MSBuild*.log") {
-            $last_error = ''
+            $last_error = $null
+            $last_error_id = $null
             $skip_note = $false
             $done = $false
             Get-Content $f | % {
@@ -49,6 +50,7 @@ runs:
                     Write-Output $last_error
                   }
                   $last_error = $null
+                  $last_error_id = $null
                   $skip_note = $false
                   if ($Matches.title -eq 'error C2220') {
                     return
@@ -58,7 +60,11 @@ runs:
                   } else {
                     $last_error = "***::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.location):%0A$($Matches.message)"
                   }
+                  $last_error_id = $id
                 } elseif ($last_error) {
+                  if (-not $last_error_id) {
+                    $last_error_id = $id
+                  }
                   if ($Matches.file.StartsWith($PWD)) {
                     if ($last_error.StartsWith('***') -and ($_.Contains("see reference") -or $_.Contains("see the first reference"))) {
                       $last_error = $last_error.Substring(3).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
@@ -73,10 +79,14 @@ runs:
                 }
               } elseif ($last_error -and -not $skip_note) {
                 if ($_ -match '.{7} {8}') {
+                  if (-not $last_error_id) {
+                    $last_error_id = $id
+                  }
                   $last_error += "%0A$_"
-                } else {
+                } else if ($id -eq $last_error_id) {
                   Write-Output $last_error
                   $last_error = $null
+                  $last_error_id = $null
                   $skip_note = $false
                 }
               }
