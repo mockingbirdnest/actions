@@ -17,6 +17,7 @@ runs:
           $skip_note = @{}
           $done = $false
           $id = 0
+          $tool = @{}
           &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
           /target:"Clean;Build"                               `
           /maxCpuCount:$max_cpu_count                         `
@@ -31,46 +32,50 @@ runs:
               $done = $true
               return
             }
-            if ($_ -match '\s+(?<id>\d+)>') {
+            if ($_ -match '^\s*(?<id>\d+)>') {
               $id = $Matches.id
             }
-            if ($_ -match '^\s+\d+>\w+:$') {
-              return
+            if ($_ -match '^(       |\s*\d+>)(?<tool>\w+):$') {
+              $tool[$id] = $Matches.tool
+            }
+            if ($key -ne $id + $tool[$id]) {
+              $key = $id + $tool[$id]
+              Write-Output ">>> $key"
             }
             if ($_ -match "\s*(?<location>(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\)): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
               if ($Matches.type -in @('error', 'warning')) {
-                if ($last_error[$id]) {
-                  Write-Output $last_error[$id]
+                if ($last_error[$key]) {
+                  Write-Output $last_error[$key]
                 }
-                $last_error[$id] = $null
-                $skip_note[$id] = $false
+                $last_error[$key] = $null
+                $skip_note[$key] = $false
                 if ($Matches.title -eq 'error C2220') {
                   return
                 }
                 if ($Matches.file.StartsWith($PWD)) {
-                  $last_error[$id] = "::$($Matches.type) file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
+                  $last_error[$key] = "::$($Matches.type) file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
                 } else {
-                  $last_error[$id] = "--::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.location):%0A$($Matches.message)"
+                  $last_error[$key] = "--::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.location):%0A$($Matches.message)"
                 }
-              } elseif ($last_error[$id]) {
+              } elseif ($last_error[$key]) {
                 if ($Matches.file.StartsWith($PWD)) {
-                  if ($last_error[$id].StartsWith('--') -and ($_.Contains("see reference") -or $_.Contains("see the first reference"))) {
-                    $last_error[$id] = $last_error[$id].Substring(2).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
+                  if ($last_error[$key].StartsWith('--') -and ($_.Contains("see reference") -or $_.Contains("see the first reference"))) {
+                    $last_error[$key] = $last_error[$key].Substring(2).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
                   }
-                  $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
+                  $last_error[$key] += "%0A$($Matches.title): $($Matches.message)"
                 } else {
-                  $skip_note[$id] = $true
+                  $skip_note[$key] = $true
                 }
               } else {
                 Write-Output "::$($Matches.type -replace 'message|note','error') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
               }
-            } elseif ($last_error[$id] -and -not $skip_note[$id]) {
+            } elseif ($last_error[$key] -and -not $skip_note[$key]) {
               if ($_.StartsWith('                 ')) {
-                $last_error[$id] += "%0A$_"
+                $last_error[$key] += "%0A$_"
               } else {
-                Write-Output $last_error[$id]
-                $last_error[$id] = $null
-                $skip_note[$id] = $false
+                Write-Output $last_error[$key]
+                $last_error[$key] = $null
+                $skip_note[$key] = $false
               }
             }
           }
