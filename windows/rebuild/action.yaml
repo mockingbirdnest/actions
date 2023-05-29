@@ -40,10 +40,7 @@ runs:
               }
               if ($last_error[$id]) {
                 if ($Matches.file.StartsWith($PWD)) {
-                  $last_error[$id] = $last_error[$id] `
-                      .Replace('{file}', $Matches.file)               `
-                      .Replace('{line}', $Matches.line)               `
-                      .Replace('{column}', $Matches.column)
+                  $last_error[$id] = $last_error[$id].Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
                 }
                 $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
               } else {
