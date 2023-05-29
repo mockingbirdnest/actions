@@ -54,12 +54,12 @@ runs:
                 if ($Matches.file.StartsWith($PWD)) {
                   $last_error[$id] = "::$($Matches.type) file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
                 } else {
-                  $last_error[$id] = "--::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.location):%0A$($Matches.message)"
+                  $last_error[$id] = "***::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.location):%0A$($Matches.message)"
                 }
               } elseif ($last_error[$id]) {
                 if ($Matches.file.StartsWith($PWD)) {
-                  if ($last_error[$id].StartsWith('--') -and ($_.Contains("see reference") -or $_.Contains("see the first reference"))) {
-                    $last_error[$id] = $last_error[$id].Substring(2).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
+                  if ($last_error[$id].StartsWith('***') -and ($_.Contains("see reference") -or $_.Contains("see the first reference"))) {
+                    $last_error[$id] = $last_error[$id].Substring(3).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
                   }
                   $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
                 } else {
