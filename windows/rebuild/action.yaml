@@ -23,7 +23,7 @@ runs:
           /property:Platform=x64                              `
           /property:UseMultiToolTask=true                     `
           /property:EnforceProcessCountAcrossBuilds=true      `
-          /distributedFileLogger	                            ̀ 
+          /distributedFileLogger	                            `
           /consoleloggerparameters:ShowEventId                `
           $_
           | % {
