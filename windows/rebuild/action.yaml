@@ -12,17 +12,22 @@ runs:
   steps:
     - run: |
         $max_cpu_count = [Math]::Ceiling((Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 4)
-        ls ${{ inputs.solution_directory }}\*.sln | %       `
-        {                                                   `
-        &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
-        /target:"Clean;Build"                               `
-        /maxCpuCount:$max_cpu_count                         `
-        /property:Configuration=${{ inputs.configuration }} `
-        /property:Platform=x64                              `
-        /property:UseMultiToolTask=true                     `
-        /property:EnforceProcessCountAcrossBuilds=true      `
-        $_                                                  `
-        }                                                   `
+        ls ${{ inputs.solution_directory }}\*.sln | % {                                                   `
+          &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
+          /target:"Clean;Build"                               `
+          /maxCpuCount:$max_cpu_count                         `
+          /property:Configuration=${{ inputs.configuration }} `
+          /property:Platform=x64                              `
+          /property:UseMultiToolTask=true                     `
+          /property:EnforceProcessCountAcrossBuilds=true      `
+          $_
+          | % {
+            Write-Output $_
+            if ($_ -match '(?<file>[^:])\((?<line>\d+),(?<column>\d+)\): (?<title>(?<type>error|warning|message) [^:]*): (?<message>.*)') {
+              Write-Output "::$($Matches.type) file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
+            }
+          }
+        }
       shell: pwsh
       env:
         PRINCIPIA_MSBUILD_PATH: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe
