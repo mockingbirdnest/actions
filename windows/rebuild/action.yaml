@@ -35,7 +35,7 @@ runs:
                 $prefix = "TSK" + $id.PadLeft(5)
                 $_ = $Matches.1
               } elseif ($_ -match "^(.*)\s*\(TargetId:(?<id>\d+)\)$") {
-                $prefix = "TGT" + $id.PadLeft(5)
+                #$prefix = "TGT" + $id.PadLeft(5)
                 $_ = $Matches.1
               }
               Write-Output "$prefix $_"
@@ -72,7 +72,7 @@ runs:
                   Write-Output "::$($Matches.type -replace 'message|note','error') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
                 }
               } elseif ($last_error -and -not $skip_note) {
-                if ($_.StartsWith('                 ')) {
+                if ($_ -match '.{8} {8}')) {
                   $last_error += "%0A$_"
                 } else {
                   Write-Output $last_error
