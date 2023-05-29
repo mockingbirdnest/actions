@@ -46,7 +46,7 @@ runs:
               } else {
                 Write-Output "::$($Matches.type -replace 'message|note','error') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
               }
-            } else if ($last_error[$id]) {
+            } elseif ($last_error[$id]) {
               if ($_.StartsWith('                 ')) {
                 $last_error[$id] += "%0A$_"
               } else {
