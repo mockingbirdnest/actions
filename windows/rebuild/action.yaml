@@ -14,6 +14,7 @@ runs:
         $max_cpu_count = [Math]::Ceiling((Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 4)
         ls ${{ inputs.solution_directory }}\*.sln | % {
           $last_error = @{}
+          $skip_note = @{}
           $id = 0
           &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
           /target:"Clean;Build"                               `
@@ -34,23 +35,31 @@ runs:
                   Write-Output $last_error[$id]
                 }
                 $last_error[$id] = $null
-                if (-not $Matches.file.StartsWith($PWD)) {
-                  $last_error[$id] = "::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.message)"
+                $skip_note[$id] = $false
+                if ($Matches.file.StartsWith($PWD)) {
+                  $last_error[$id] = "::$($Matches.type) file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
+                } else {
+                  $last_error[$id] = "::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$_"
                 }
               } elseif ($last_error[$id]) {
                 if ($Matches.file.StartsWith($PWD)) {
-                  $last_error[$id] = $last_error[$id].Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
+                  if ($_.Contains("see reference") -or $_.Contains("see the first reference")) {
+                    $last_error[$id] = $last_error[$id].Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
+                  }
+                  $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
+                } else {
+                  $skip_note[$id] = $true
                 }
-                $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
               } else {
                 Write-Output "::$($Matches.type -replace 'message|note','error') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
               }
-            } elseif ($last_error[$id]) {
+            } elseif ($last_error[$id] -and -not $skip_note[$id]) {
               if ($_.StartsWith('                 ')) {
                 $last_error[$id] += "%0A$_"
               } else {
                 Write-Output $last_error[$id]
                 $last_error[$id] = $null
+                $skip_note[$id] = $false
               }
             }
           }
