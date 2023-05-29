@@ -37,6 +37,7 @@ runs:
             }
             if ($_ -match '^(       |\s*\d+>)(?<tool>\w+):$') {
               $tool[$id] = $Matches.tool
+              return
             }
             if ($key -ne $id + $tool[$id]) {
               $key = $id + $tool[$id]
