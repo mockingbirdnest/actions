@@ -28,7 +28,7 @@ runs:
             if ($_ -match '\s+(?<id>\d+)>') {
               $id = $Matches.id
             }
-            if ($_ -match "(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
+            if ($_ -match "\s*(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
               if ($Matches.type -in @('error', 'warning')) {
                 if ($last_error[$id]) {
                   Write-Output $last_error[$id]
@@ -37,8 +37,7 @@ runs:
                 if (-not $Matches.file.StartsWith($PWD)) {
                   $last_error[$id] = "::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.message)"
                 }
-              }
-              if ($last_error[$id]) {
+              } elseif ($last_error[$id]) {
                 if ($Matches.file.StartsWith($PWD)) {
                   $last_error[$id] = $last_error[$id].Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
                 }
