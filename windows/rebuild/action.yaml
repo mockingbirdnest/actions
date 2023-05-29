@@ -64,6 +64,7 @@ runs:
                       $last_error = $last_error.Substring(3).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
                     }
                     $last_error += "%0A$($Matches.title): $($Matches.message)"
+                    $skip_note = $false
                   } else {
                     $skip_note = $true
                   }
