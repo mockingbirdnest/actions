@@ -83,7 +83,7 @@ runs:
                     $last_error_id = $id
                   }
                   $last_error += "%0A$_"
-                } else if ($id -eq $last_error_id) {
+                } elseif ($id -eq $last_error_id) {
                   Write-Output $last_error
                   $last_error = $null
                   $last_error_id = $null
