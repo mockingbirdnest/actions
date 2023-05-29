@@ -27,7 +27,7 @@ runs:
           $_
           | % {
             Write-Output $_
-            if ($done -or $_ == 'Build FAILED.') {
+            if ($done -or $_ -eq 'Build FAILED.') {
               $done = $true
               return
             }
