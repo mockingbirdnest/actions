@@ -55,7 +55,7 @@ runs:
                 if ($last_error['']) {
                   Write-Output $last_error['']
                 }
-                if ($last_error[$id]) {
+                if ($id -and $last_error[$id]) {
                   Write-Output $last_error[$id]
                 }
                 $last_error[''] = $null
