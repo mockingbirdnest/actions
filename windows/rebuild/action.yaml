@@ -66,7 +66,7 @@ runs:
                 }
                 if ($Matches.file.StartsWith($PWD)) {
                   $last_error[$id] = "::$($Matches.type) file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
-                } else {
+                } else {  
                   $last_error[$id] = "***::$($Matches.type) file={file},line={line},col={column},title=$($Matches.title)::$($Matches.location):%0A$($Matches.message)"
                 }
               } elseif ($last_error[$id]) {
@@ -80,7 +80,7 @@ runs:
                   $skip_note[$id] = $true
                 }
               } else {
-                Write-Output "::$($Matches.type -replace 'message|note','error') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
+                Write-Output "::$($Matches.type -replace 'message|note','notice') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
               }
             } elseif ($last_error[$id] -and -not $skip_note[$id]) {
               if ($_.StartsWith('                 ')) {
