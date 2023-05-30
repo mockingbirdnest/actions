@@ -14,7 +14,7 @@ runs:
         $max_cpu_count = [Math]::Ceiling((Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 4)
         ls ${{ inputs.solution_directory }}\*.sln | % {
           $last_error = @{}
-          $skip_note = @{}
+          $skip_note_details = @{}
           $done = $false
           &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
           /target:"Clean;Build"                               `
@@ -47,7 +47,7 @@ runs:
                 Write-Output $last_error[$id]
               }
               $last_error[$id] = $last_error['']
-              $skip_note[$id] = $false
+              $skip_note_details[$id] = $false
               $last_error[''] = $null
             }
             if ($_ -match "\s*(?<location>(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\)): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
@@ -60,7 +60,7 @@ runs:
                 }
                 $last_error[''] = $null
                 $last_error[$id] = $null
-                $skip_note[$id] = $false
+                $skip_note_details[$id] = $false
                 if ($Matches.title -eq 'error C2220') {
                   return
                 }
@@ -74,21 +74,21 @@ runs:
                   if ($last_error[$id].StartsWith('***') -and ($_.Contains("see reference") -or $_.Contains("see the first reference"))) {
                     $last_error[$id] = $last_error[$id].Substring(3).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
                   }
-                  $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
-                  $skip_note[$id] = $false
+                  $skip_note_details[$id] = $false
                 } else {
-                  $skip_note[$id] = $true
+                  $skip_note_details[$id] = $true
                 }
+                $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
               } else {
                 Write-Output "::$($Matches.type -replace 'message|note','notice') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
               }
-            } elseif ($last_error[$id] -and -not $skip_note[$id]) {
+            } elseif ($last_error[$id] -and -not $skip_note_details[$id]) {
               if ($_ -match '.{7} {8}') {
                 $last_error[$id] += "%0A$_"
               } else {
                 Write-Output $last_error[$id]
                 $last_error[$id] = $null
-                $skip_note[$id] = $false
+                $skip_note_details[$id] = $false
               }
             }
           }
