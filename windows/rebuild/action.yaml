@@ -34,10 +34,10 @@ runs:
               $prefix = "TSK" + $id.PadLeft(5)
               $_ = $Matches.1
             } elseif ($_ -match "^(.*)\s*\(TargetId:(?<id>\d+)\)$") {
-              $prefix = "TGT" + $id.PadLeft(5)
+              $prefix = "TGT" + $Matches.id.PadLeft(5)
               $_ = $Matches.1
             }
-            Write-Output "$prefix $_"
+            Write-Output "$prefix|$_"
             if ($done -or $_ -eq 'Build FAILED.') {
               $done = $true
               return
@@ -83,7 +83,7 @@ runs:
                 Write-Output "::$($Matches.type -replace 'message|note','notice') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
               }
             } elseif ($last_error[$id] -and -not $skip_note[$id]) {
-              if ($_.StartsWith('                 ')) {
+              if ($_ -match '.{7} {8}') {
                 $last_error[$id] += "%0A$_"
               } else {
                 Write-Output $last_error[$id]
