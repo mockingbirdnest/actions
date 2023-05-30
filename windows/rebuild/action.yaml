@@ -42,11 +42,23 @@ runs:
               $done = $true
               return
             }
+            if ($last_error[''] -and $id) {
+              if ($last_error[$id]) {
+                Write-Output $last_error[$id]
+              }
+              $last_error[$id] = $last_error['']
+              $skip_note[$id] = $false
+              $last_error[''] = $null
+            }
             if ($_ -match "\s*(?<location>(?<file>[^>]*)\((?<line>\d+),(?<column>\d+)\)): (?<title>(?<type>error|warning|message|note)[^:]*): (?<message>.*)") {
               if ($Matches.type -in @('error', 'warning')) {
+                if ($last_error['']) {
+                  Write-Output $last_error['']
+                }
                 if ($last_error[$id]) {
                   Write-Output $last_error[$id]
                 }
+                $last_error[''] = $null
                 $last_error[$id] = $null
                 $skip_note[$id] = $false
                 if ($Matches.title -eq 'error C2220') {
@@ -63,6 +75,7 @@ runs:
                     $last_error[$id] = $last_error[$id].Substring(3).Replace('{file}', $Matches.file).Replace('{line}', $Matches.line).Replace('{column}', $Matches.column)
                   }
                   $last_error[$id] += "%0A$($Matches.title): $($Matches.message)"
+                  $skip_note[$id] = $false
                 } else {
                   $skip_note[$id] = $true
                 }
@@ -79,11 +92,7 @@ runs:
               }
             }
           }
-          Write-Output $last_error.Values 
-          foreach ($f in ls "MSBuild*.log") {
-            Get-Content $f
-            echo "================================="
-          }
+          Write-Output $last_error.Values
         }
       shell: pwsh
       env:
