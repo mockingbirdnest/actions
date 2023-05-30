@@ -82,7 +82,11 @@ runs:
               } else {
                 Write-Output "SUPPRESSED::$($Matches.type -replace 'message|note','notice') file=$($Matches.file),line=$($Matches.line),col=$($Matches.column),title=$($Matches.title)::$($Matches.message)"
               }
-            } elseif ($last_error[$id] -and -not $skip_note[$id]) {
+            } elseif ($last_error[$id] -and -not $skip_note[$id] -and $_ -notmatch '^         \S') {
+              # At 9 spaces we have filenames, commands, etc. which sometimes
+              # get interspersed in the logs for one TaskId.  Ignore these.
+              # Notes are also at 9 spaces, so we need to have checked that this
+              # is not a note already.
               if ($_ -match '.{7} {8}') {
                 $last_error[$id] += "%0A$_"
               } else {
