@@ -11,7 +11,7 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        &"$env:GITHUB_ACTION_PATH/parse_msbuild.ps1"
+        . "$env:GITHUB_ACTION_PATH/parse_msbuild.ps1"
         $max_cpu_count = [Math]::Ceiling((Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 4)
         ls ${{ inputs.solution_directory }}\*.sln | % {
           &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
