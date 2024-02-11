@@ -14,7 +14,7 @@ runs:
 
         # Set the MSBuild path.
         Write-Output                                                                                                      `
-        'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/MSBuild.exe' `
+        'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/amd64/MSBuild.exe' `
         >> $env:GITHUB_ENV
 
         # Set the build signature path.
