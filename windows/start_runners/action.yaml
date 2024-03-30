@@ -21,9 +21,9 @@ runs:
   steps:
     - uses: azure/login@v2
       with:
-        client-id: ${{ input.client_id }}
-        tenant-id: ${{ input.tenant_id }}
-        subscription-id: ${{ input.subscription_id }}
+        client-id: ${{ inputs.client_id }}
+        tenant-id: ${{ inputs.tenant_id }}
+        subscription-id: ${{ inputs.subscription_id }}
         enable-AzPSSession: true
 
     - uses: azure/powershell@v2
