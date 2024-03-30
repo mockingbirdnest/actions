@@ -11,7 +11,7 @@ runs:
         echo "PRINCIPIA_ARTIFACT_NAME=${{ inputs.configuration}}-$(git describe --tags --always --dirty --abbrev=40 --long)" `
           >> $env:GITHUB_ENV
       shell: pwsh
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: principia_${{ env.PRINCIPIA_ARTIFACT_NAME }}
         # The * after GameData is to preserve that directory in the artifact.
