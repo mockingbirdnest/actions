@@ -11,11 +11,6 @@ inputs:
     description: 'Subscription id for Azure login.'
     required: true
 
-env:
-  PRINCIPIA_BUILD_DEBUG_VM: casanova
-  PRINCIPIA_BUILD_RELEASE_VM: marco-polo
-  PRINCIPIA_BUILD_RESOURCE_GROUP: venezia
-
 runs:
   using: 'composite'
   steps:
@@ -36,3 +31,8 @@ runs:
           -Name ${{ env.PRINCIPIA_BUILD_RELEASE_VM }} `
           -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}
         azPSVersion: 'latest'
+      env:
+        PRINCIPIA_BUILD_DEBUG_VM: casanova
+        PRINCIPIA_BUILD_RELEASE_VM: marco-polo
+        PRINCIPIA_BUILD_RESOURCE_GROUP: venezia
+
