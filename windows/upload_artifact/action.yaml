@@ -30,6 +30,7 @@ runs:
         name: ${{ inputs.name }}
         path: |
           ${{ inputs.headers_directory }}/**/*.h
+          ${{ inputs.headers_directory }}/**/*.hpp
           ${{ inputs.headers_directory }}/**/*.inc
           ${{ inputs.headers_directory }}/**/*.proto
           ${{ inputs.solution_directory }}/**/*.dll
