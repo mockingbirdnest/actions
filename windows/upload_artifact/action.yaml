@@ -4,6 +4,9 @@ inputs:
   name:
     description: 'Name of the artifact to create.'
     required: true
+  configuration:
+    description: 'Configuration with which the artifact was created.'
+    required: true
   headers_directory:
     description: 'A glob for the directory containing the headers to be included.'
     required: true
@@ -22,12 +25,12 @@ runs:
     - name: Upload build signature
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.name }}.signature
+        name: ${{ inputs.name }}.${{ inputs.configuration }}.signature
         path: ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
     - name: Upload build headers and objects
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.name }}
+        name: ${{ inputs.name }}.${{ inputs.configuration }}
         path: |
           ${{ inputs.headers_directory }}/**/*.h
           ${{ inputs.headers_directory }}/**/*.hpp
