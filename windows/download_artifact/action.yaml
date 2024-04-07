@@ -37,7 +37,7 @@ runs:
         github_token: ${{ github.token }}
         workflow: build.yaml
         workflow_conclusion: success
-        name: ${{ inputs.name }}.signature
+        name: ${{ inputs.name }}.${{ inputs.configuration }}.signature
         path: ${{ steps.initialize.outputs.build_signature_cache_path }}
         repo: mockingbirdnest/${{ inputs.name }}
 
@@ -59,6 +59,6 @@ runs:
         github_token: ${{ github.token }}
         workflow: build.yaml
         workflow_conclusion: success
-        name: ${{ inputs.name }}
+        name: ${{ inputs.name }}.${{ inputs.configuration }}
         path: ${{ github.workspace }}/../${{ inputs.directory }}/${{ inputs.name }}
         repo: mockingbirdnest/${{ inputs.name }}
