@@ -1,4 +1,4 @@
-name: windows/start_runners
+name: windows/stop_runners
 description: 'Stop seft-hosted runners.'
 inputs:
   client_id:
