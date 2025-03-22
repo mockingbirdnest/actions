@@ -1,0 +1,38 @@
+name: windows/start_runners
+description: 'Stop seft-hosted runners.'
+inputs:
+  client_id:
+    description: 'Client id for Azure login.'
+    required: true
+  tenant_id:
+    description: 'Tenant id for Azure login.'
+    required: true
+  subscription_id:
+    description: 'Subscription id for Azure login.'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: azure/login@v2
+      with:
+        client-id: ${{ inputs.client_id }}
+        tenant-id: ${{ inputs.tenant_id }}
+        subscription-id: ${{ inputs.subscription_id }}
+        enable-AzPSSession: true
+
+    - uses: azure/powershell@v2
+      with:
+        inlineScript: |
+          Stop-AzVM                                `
+          -Name ${{ env.PRINCIPIA_BUILD_DEBUG_VM }} `
+          -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}
+          Stop-AzVM                                  `
+          -Name ${{ env.PRINCIPIA_BUILD_RELEASE_VM }} `
+          -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}
+        azPSVersion: 'latest'
+      env:
+        PRINCIPIA_BUILD_DEBUG_VM: casanova
+        PRINCIPIA_BUILD_RELEASE_VM: marco-polo
+        PRINCIPIA_BUILD_RESOURCE_GROUP: venezia
+
