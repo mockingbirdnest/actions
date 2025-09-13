@@ -24,11 +24,11 @@ runs:
     - uses: azure/powershell@v2
       with:
         inlineScript: |
-          ${{ env.PRINCIPIA_BUILD_DEBUG_VM }}, ${{ env.PRINCIPIA_BUILD_RELEASE_VM }} | `
-          ForEach-Object -Parallel {                                                   `
-            Start-AzVM                                                                 `
-            -Name $_                                                                   `
-            -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}               `
+          '${{ env.PRINCIPIA_BUILD_DEBUG_VM }}', '${{ env.PRINCIPIA_BUILD_RELEASE_VM }}' | `
+          ForEach-Object -Parallel {                                                       `
+            Start-AzVM                                                                     `
+            -Name $_                                                                       `
+            -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}                   `
           }
         azPSVersion: 'latest'
       env:
