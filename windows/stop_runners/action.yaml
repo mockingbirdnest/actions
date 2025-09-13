@@ -24,14 +24,13 @@ runs:
     - uses: azure/powershell@v2
       with:
         inlineScript: |
-          Stop-AzVM                                 `
-          -Force                                    `
-          -Name ${{ env.PRINCIPIA_BUILD_DEBUG_VM }} `
-          -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}
-          Stop-AzVM                                   `
-          -Force                                      `
-          -Name ${{ env.PRINCIPIA_BUILD_RELEASE_VM }} `
-          -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}
+          '${{ env.PRINCIPIA_BUILD_DEBUG_VM }}', '${{ env.PRINCIPIA_BUILD_RELEASE_VM }}' | `
+          ForEach-Object -Parallel {                                                       `
+            Stop-AzVM                                                                      `
+            -Force                                                                         `
+            -Name $_                                                                       `
+            -ResourceGroupName ${{ env.PRINCIPIA_BUILD_RESOURCE_GROUP }}                   `
+          }
         azPSVersion: 'latest'
       env:
         PRINCIPIA_BUILD_DEBUG_VM: casanova
