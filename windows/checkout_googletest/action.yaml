@@ -1,0 +1,11 @@
+name: windows/checkout_googletest
+description: 'Checks out the googletest header files on Windows.'
+runs:
+  using: 'composite'
+  steps:
+    - uses: mockingbirdnest/actions/windows/checkout_dependency@main
+      with:
+        name: googletest
+        ref: master
+        headers_directory: google????/include
+        solution_directory: google????/msvc

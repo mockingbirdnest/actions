@@ -7,5 +7,5 @@ runs:
       with:
         name: abseil-cpp
         ref: master
-        headers_directory: ${{ absl }}
-        solution_directory: ${{ msvc }}
+        headers_directory: absl
+        solution_directory: msvc

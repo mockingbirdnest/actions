@@ -1,0 +1,11 @@
+name: windows/checkout_re2
+description: 'Checks out the re2 header files on Windows.'
+runs:
+  using: 'composite'
+  steps:
+    - uses: mockingbirdnest/actions/windows/checkout_dependency@main
+      with:
+        name: re2
+        ref: main
+        headers_directory: re2
+        solution_directory: msvc
