@@ -29,7 +29,7 @@ runs:
       with:
         name: ${{ inputs.name }}.${{ inputs.configuration }}
         path: |
-          ${{ inputs.solution_directory }}/**/*.dll
-          ${{ inputs.solution_directory }}/**/*.exe
-          ${{ inputs.solution_directory }}/**/*.lib
-          ${{ inputs.solution_directory }}/**/*.pdb
+          ./${{ inputs.solution_directory }}/**/*.dll
+          ./${{ inputs.solution_directory }}/**/*.exe
+          ./${{ inputs.solution_directory }}/**/*.lib
+          ./${{ inputs.solution_directory }}/**/*.pdb
