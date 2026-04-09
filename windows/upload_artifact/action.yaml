@@ -27,17 +27,22 @@ runs:
       with:
         name: ${{ inputs.name }}.${{ inputs.configuration }}.signature
         path: ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
-    - name: Upload build headers and objects
+    - name: Upload build headers and properties
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.name }}.${{ inputs.configuration }}
+        name: ${{ inputs.name }}.${{ inputs.configuration }}.hdr
         path: |
           ${{ inputs.headers_directory }}/**/*.h
           ${{ inputs.headers_directory }}/**/*.hpp
           ${{ inputs.headers_directory }}/**/*.inc
           ${{ inputs.headers_directory }}/**/*.proto
+          ${{ inputs.solution_directory }}/**/*.props
+    - name: Upload libraries and objects
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.name }}.${{ inputs.configuration }}.bin
+        path: |
           ${{ inputs.solution_directory }}/**/*.dll
           ${{ inputs.solution_directory }}/**/*.exe
           ${{ inputs.solution_directory }}/**/*.lib
           ${{ inputs.solution_directory }}/**/*.pdb
-          ${{ inputs.solution_directory }}/**/*.props
