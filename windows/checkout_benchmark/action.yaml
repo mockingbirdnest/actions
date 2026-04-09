@@ -1,0 +1,11 @@
+name: windows/checkout_benchmark
+description: 'Checks out the benchmark header files on Windows.'
+runs:
+  using: 'composite'
+  steps:
+    - uses: mockingbirdnest/actions/windows/checkout_dependency@main
+      with:
+        name: benchmark
+        ref: master
+        headers_directory: benchmark
+        solution_directory: msvc
