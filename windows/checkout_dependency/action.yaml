@@ -1,5 +1,5 @@
 name: windows/checkout_dependency
-description: 'Checks out the source file for a dependency project on Windows.'
+description: 'Checks out the header files for a dependency project on Windows.'
 inputs:
   name:
     description: 'Simple name of the mockingbirdnest repository to check out.'
