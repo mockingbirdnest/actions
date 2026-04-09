@@ -20,12 +20,11 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout source files
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         repository: mockingbirdnest/${{ inputs.name }}
         ref: ${{ inputs.ref }}
-        path: ${{ github.workspace }}/../${{ inputs.checkout_directory }}/${{ inputs.name }}
+        path: ${{ github.workspace }}/tmp/${{ inputs.name }}
         sparse-checkout: |
           ${{ inputs.headers_directory }}/**/*.h
           ${{ inputs.headers_directory }}/**/*.hpp
@@ -34,4 +33,9 @@ runs:
           ${{ inputs.solution_directory }}/**/*.props
         sparse-checkout-cone-mode: false
         fetch-depth: 1
+    - run: |
+        mv ${{ github.workspace }}/tmp/${{ inputs.name }} `
+          ${{ github.workspace }}/../${{ inputs.checkout_directory }}/${{ inputs.name }}
+      shell: pwsh
+
 
