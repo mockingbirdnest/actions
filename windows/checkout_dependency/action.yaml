@@ -34,7 +34,8 @@ runs:
         sparse-checkout-cone-mode: false
         fetch-depth: 1
     - run: |
-        mv ${{ github.workspace }}/tmp/${{ inputs.name }} `
+        Move-Item -Force `
+          ${{ github.workspace }}/tmp/${{ inputs.name }} `
           ${{ github.workspace }}/../${{ inputs.checkout_directory }}/${{ inputs.name }}
       shell: pwsh
 
