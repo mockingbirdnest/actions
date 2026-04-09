@@ -1,16 +1,11 @@
 name: windows/checkout_abseil
 description: 'Checks out the abseil-cpp header files on Windows.'
-
-env:
-  PRINCIPIA_HEADERS_ABSEIL: absl
-  PRINCIPIA_MSVC_ABSEIL: msvc
-
-jobs:runs:
+runs:
   using: 'composite'
   steps:
     - uses: mockingbirdnest/actions/windows/checkout_dependency@main
       with:
         name: abseil-cpp
         ref: master
-        headers_directory: ${{ PRINCIPIA_HEADERS_ABSEIL }}
-        solution_directory: ${{ PRINCIPIA_MSVC_ABSEIL }}
+        headers_directory: ${{ absl }}
+        solution_directory: ${{ msvc }}
