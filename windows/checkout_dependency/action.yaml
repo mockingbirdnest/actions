@@ -24,7 +24,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: mockingbirdnest/${{ inputs.name }}
-        ref: ${{ input.ref }}
+        ref: ${{ inputs.ref }}
         path: ${{ github.workspace }}/../${{ inputs.checkout_directory }}/${{ inputs.name }}
         sparse-checkout: |
           ${{ inputs.headers_directory }}/**/*.h
