@@ -4,8 +4,8 @@ inputs:
   configuration:
     description: 'The configuration (Debug, Release, etc.) to build.'
     required: true
-  solution_file:
-    description: 'The path to the MSVC solution file.'
+  solution_glob:
+    description: 'A glob for the MSVC solution files to build.'
     required: true
 runs:
   using: 'composite'
@@ -13,7 +13,7 @@ runs:
     - run: |
         . "$env:GITHUB_ACTION_PATH/parse_msbuild.ps1"
         $max_cpu_count = [Math]::Ceiling((Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors / 4)
-        ls ${{ inputs.solution_file }} | % {
+        ls ${{ inputs.solution_glob }} | % {
           &"${{ env.PRINCIPIA_MSBUILD_PATH }}"                `
           /target:"Clean;Build"                               `
           /maxCpuCount:$max_cpu_count                         `
