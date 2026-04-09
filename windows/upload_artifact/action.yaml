@@ -7,9 +7,6 @@ inputs:
   configuration:
     description: 'Configuration with which the artifact was created.'
     required: true
-  headers_directory:
-    description: 'A glob for the directory containing the headers to be included.'
-    required: true
   solution_directory:
     description: 'The path where the MSVC solution is located.'
     required: true
@@ -27,20 +24,10 @@ runs:
       with:
         name: ${{ inputs.name }}.${{ inputs.configuration }}.signature
         path: ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
-    - name: Upload build headers and properties
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ inputs.name }}.${{ inputs.configuration }}.hdr
-        path: |
-          ${{ inputs.headers_directory }}/**/*.h
-          ${{ inputs.headers_directory }}/**/*.hpp
-          ${{ inputs.headers_directory }}/**/*.inc
-          ${{ inputs.headers_directory }}/**/*.proto
-          ${{ inputs.solution_directory }}/**/*.props
     - name: Upload libraries and objects
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ inputs.name }}.${{ inputs.configuration }}.bin
+        name: ${{ inputs.name }}.${{ inputs.configuration }}
         path: |
           ${{ inputs.solution_directory }}/**/*.dll
           ${{ inputs.solution_directory }}/**/*.exe
