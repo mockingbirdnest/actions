@@ -23,12 +23,12 @@ runs:
         Write-Output $signature > ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
       shell: pwsh
     - name: Upload build signature
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.name }}.${{ inputs.configuration }}.signature
         path: ${{ env.PRINCIPIA_BUILD_SIGNATURE_PATH }}
     - name: Upload libraries and objects
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ inputs.name }}.${{ inputs.configuration }}
         path: |
