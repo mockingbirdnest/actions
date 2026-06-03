@@ -14,14 +14,14 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: azure/login@v2
+    - uses: azure/login@v3
       with:
         client-id: ${{ inputs.client_id }}
         tenant-id: ${{ inputs.tenant_id }}
         subscription-id: ${{ inputs.subscription_id }}
         enable-AzPSSession: true
 
-    - uses: azure/powershell@v2
+    - uses: azure/powershell@v3
       with:
         inlineScript: |
           '${{ env.PRINCIPIA_BUILD_DEBUG_VM }}', '${{ env.PRINCIPIA_BUILD_RELEASE_VM }}' | `
