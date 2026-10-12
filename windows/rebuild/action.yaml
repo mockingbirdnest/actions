@@ -7,6 +7,10 @@ inputs:
   solution_glob:
     description: 'A glob for the MSVC solution files to build.'
     required: true
+  extra_flags:
+    description: 'Extra flags for msbuild.'
+    required: false
+    default: '/distributedFileLogger'
 runs:
   using: 'composite'
   steps:
@@ -21,8 +25,8 @@ runs:
           /property:Platform=x64                              `
           /property:UseMultiToolTask=true                     `
           /property:EnforceProcessCountAcrossBuilds=true      `
-          /distributedFileLogger	                            `
           /consoleloggerparameters:ShowEventId                `
+          ${{ inputs.extra_flags }}                           `
           $_
           | Parse-MSBuild
         }
