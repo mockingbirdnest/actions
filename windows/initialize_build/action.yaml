@@ -4,6 +4,10 @@ inputs:
   configuration:
     description: 'The configuration (Debug, Release, etc.) to build.'
     required: true
+  vs:
+    description: 'The Visual Studio version to use.'
+    required: false
+    default: '2022'
 runs:
   using: 'composite'
   steps:
@@ -14,7 +18,7 @@ runs:
 
         # Set the MSBuild path.
         Write-Output                                                                                                      `
-        'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/MSBuild/Current/Bin/amd64/MSBuild.exe' `
+        'PRINCIPIA_MSBUILD_PATH=C:/Program Files/Microsoft Visual Studio/${{ inputs.vs }}/Enterprise/MSBuild/Current/Bin/amd64/MSBuild.exe' `
         >> $env:GITHUB_ENV
 
         # Set the build signature path.
